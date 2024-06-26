@@ -44,10 +44,6 @@
 	grabtargets = list(BODY_ZONE_HEAD, BODY_ZONE_PRECISE_R_EYE, BODY_ZONE_PRECISE_L_EYE, BODY_ZONE_PRECISE_NOSE, BODY_ZONE_PRECISE_MOUTH, BODY_ZONE_PRECISE_SKULL, BODY_ZONE_PRECISE_EARS, BODY_ZONE_PRECISE_NECK)
 	resistance_flags = FLAMMABLE
 
-	/// Our left eye has been poked out, ouch
-	var/left_eye_poked = FALSE
-	/// Our right eye has been poked out, ouch
-	var/right_eye_poked = FALSE
 	/// Brainkill means that this head is considered dead and revival is impossible
 	var/brainkill = FALSE
 
@@ -104,22 +100,19 @@
 	for(var/obj/item/I in src)
 		if(I == brain)
 			if(user)
-				user.visible_message("<span class='warning'>[user] saws [src] open and pulls out a brain!</span>", "<span class='notice'>I saw [src] open and pull out a brain.</span>")
+				user.visible_message(span_warning("[user] saws [src] open and pulls out a brain!"), span_notice("I saw [src] open and pull out a brain."))
 			if(brainmob)
 				brainmob.container = null
 				brainmob.forceMove(brain)
 				brain.brainmob = brainmob
 				brainmob = null
 			if(violent_removal && prob(rand(80, 100))) //ghetto surgery can damage the brain.
-				to_chat(user, "<span class='warning'>[brain] was damaged in the process!</span>")
+				to_chat(user, span_warning("[brain] was damaged in the process!"))
 				brain.setOrganDamage(brain.maxHealth)
 			brain.forceMove(T)
 			brain = null
 			update_icon_dropped()
 		else
-			if(istype(I, /obj/item/reagent_containers/pill))
-				for(var/datum/action/item_action/hands_free/activate_pill/AP in I.actions)
-					qdel(AP)
 			I.forceMove(T)
 	eyes = null
 	ears = null
@@ -200,15 +193,6 @@
 	if(dropped) //certain overlays only appear when the limb is being detached from its owner.
 
 		if(status != BODYPART_ROBOTIC) //having a robotic head hides certain features.
-			//facial hair
-			if(facial_hairstyle)
-				var/datum/sprite_accessory/S = GLOB.facial_hairstyles_list[facial_hairstyle]
-				if(S)
-					var/image/facial_overlay = image(S.icon, "[S.icon_state]", -HAIR_LAYER, SOUTH)
-					facial_overlay.color = "#" + facial_hair_color
-					facial_overlay.alpha = hair_alpha
-					. += facial_overlay
-
 			//Applies the debrained overlay if there is no brain
 			if(!brain)
 				var/image/debrain_overlay = image(layer = -HAIR_LAYER, dir = SOUTH)
@@ -222,13 +206,6 @@
 					debrain_overlay.icon = 'icons/mob/human_face.dmi'
 					debrain_overlay.icon_state = "debrained"
 				. += debrain_overlay
-			else
-				var/datum/sprite_accessory/S2 = GLOB.hairstyles_list[hairstyle]
-				if(S2)
-					var/image/hair_overlay = image(S2.icon, "[S2.icon_state]", -HAIR_LAYER, SOUTH)
-					hair_overlay.color = "#" + hair_color
-					hair_overlay.alpha = hair_alpha
-					. += hair_overlay
 			//ROGTODO add accessories (earrings, piercings) here
 
 		// lipstick

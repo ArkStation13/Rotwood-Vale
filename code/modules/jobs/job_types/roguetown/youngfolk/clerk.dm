@@ -6,15 +6,9 @@
 	total_positions = 1
 	spawn_positions = 1
 
-	allowed_races = list(
-		"Humen",
-		"Elf",
-		"Half-Elf",
-		"Dwarf",
-		"Aasimar",
-	)
+	allowed_races = RACES_TOLERATED_UP
 	allowed_sexes = list(MALE, FEMALE)
-	allowed_ages = YOUNG_AGES_LIST
+	allowed_ages = list(AGE_ADULT)
 
 	tutorial = "You have been granted the privilege of serving as a clerk in the Steward's office. You help the Steward with anything they need, and learn how coin keeps the town moving and prosperous."
 

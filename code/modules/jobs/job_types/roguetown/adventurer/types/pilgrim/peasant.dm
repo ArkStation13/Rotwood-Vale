@@ -2,22 +2,10 @@
 	name = "Farmer"
 	tutorial = "As a Peasent, you are a skilled farmer, able to grow a variety of berrys and apples \
 	Join the local Soilsmen at their farm, or make your own little orchard."
-	allowed_sexes = list("male", "female")
-	allowed_races = list(
-		"Humen",
-		"Elf",
-		"Half-Elf",
-		"Dwarf",
-		"Tiefling",
-		"Argonian",
-		"Dark Elf",
-		"Aasimar",
-		"Half Orc"
-	)
+	allowed_sexes = list(MALE, FEMALE)
+	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/adventurer/peasant
-	isvillager = TRUE
-	ispilgrim = TRUE
-
+	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 
 /datum/outfit/job/roguetown/adventurer/peasant/pre_equip(mob/living/carbon/human/H)
 	..()

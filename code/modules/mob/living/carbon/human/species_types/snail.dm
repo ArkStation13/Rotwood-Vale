@@ -16,8 +16,6 @@
 	sexes = FALSE //snails are hermaphrodites
 	var/shell_type = /obj/item/storage/backpack/snail
 
-	mutanteyes = /obj/item/organ/eyes/snail
-	mutanttongue = /obj/item/organ/tongue/snail
 	exotic_blood = /datum/reagent/lube
 
 /datum/species/snail/handle_chemicals(datum/reagent/chem, mob/living/carbon/human/H)
@@ -51,7 +49,7 @@
 	item_state = "snailshell"
 	lefthand_file = 'icons/mob/inhands/equipment/backpack_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/backpack_righthand.dmi'
-	armor = list("melee" = 40, "bullet" = 30, "laser" = 30, "energy" = 10, "bomb" = 25, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 50)
+	armor = list("blunt" = 40, "slash" = 40, "stab" = 40, "bullet" = 30, "laser" = 30, "energy" = 10, "bomb" = 25, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 50)
 	max_integrity = 200
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 

@@ -11,8 +11,6 @@
 	inherent_traits = list(TRAIT_RADIMMUNE,TRAIT_VIRUSIMMUNE,TRAIT_NOBREATH, TRAIT_NOFLASH)
 	inherent_factions = list("faithless")
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC
-	mutanteyes = /obj/item/organ/eyes/night_vision
-
 
 /datum/species/shadow/spec_life(mob/living/carbon/human/H)
 	var/turf/T = H.loc
@@ -37,9 +35,6 @@
 	no_equip = list(SLOT_WEAR_MASK, SLOT_ARMOR, SLOT_GLOVES, SLOT_SHOES, SLOT_PANTS, SLOT_S_STORE)
 	species_traits = list(NOBLOOD,NO_UNDERWEAR,NO_DNA_COPY,NOTRANSSTING,NOEYESPRITES)
 	inherent_traits = list(TRAIT_NOFLASH, TRAIT_RESISTCOLD,TRAIT_NOBREATH,TRAIT_RESISTHIGHPRESSURE,TRAIT_RESISTLOWPRESSURE,TRAIT_CHUNKYFINGERS,TRAIT_RADIMMUNE,TRAIT_VIRUSIMMUNE,TRAIT_PIERCEIMMUNE,TRAIT_NODISMEMBER,TRAIT_NOHUNGER)
-	mutanteyes = /obj/item/organ/eyes/night_vision/nightmare
-	mutant_organs = list(/obj/item/organ/heart/nightmare)
-	mutant_brain = /obj/item/organ/brain/nightmare
 
 	var/info_text = "You are a <span class='danger'>Nightmare</span>. The ability <span class='warning'>shadow walk</span> allows unlimited, unrestricted movement in the dark while activated. \
 					Your <span class='warning'>light eater</span> will destroy any light producing objects you attack, as well as destroy any lights a living creature may be holding. You will automatically dodge gunfire and melee attacks when on a dark tile. If killed, you will eventually revive if left in darkness."
@@ -55,7 +50,7 @@
 	if(istype(T))
 		var/light_amount = T.get_lumcount()
 		if(light_amount < SHADOW_SPECIES_LIGHT_THRESHOLD)
-			H.visible_message("<span class='danger'>[H] dances in the shadows, evading [P]!</span>")
+			H.visible_message(span_danger("[H] dances in the shadows, evading [P]!"))
 			playsound(T, "bullet_miss", 75, TRUE)
 			return BULLET_ACT_FORCE_PIERCE
 	return ..()
@@ -75,7 +70,7 @@
 	..()
 	if(M.dna.species.id != "nightmare")
 		M.set_species(/datum/species/shadow/nightmare)
-		visible_message("<span class='warning'>[M] thrashes as [src] takes root in [M.p_their()] body!</span>")
+		visible_message(span_warning("[M] thrashes as [src] takes root in [M.p_their()] body!"))
 	var/obj/effect/proc_holder/spell/targeted/shadowwalk/SW = new
 	M.AddSpell(SW)
 	shadowwalk = SW
@@ -101,13 +96,13 @@
 /obj/item/organ/heart/nightmare/attack(mob/M, mob/living/carbon/user, obj/target)
 	if(M != user)
 		return ..()
-	user.visible_message("<span class='warning'>[user] raises [src] to [user.p_their()] mouth and tears into it with [user.p_their()] teeth!</span>", \
-						 "<span class='danger'>[src] feels unnaturally cold in my hands. You raise [src] my mouth and devour it!</span>")
+	user.visible_message(span_warning("[user] raises [src] to [user.p_their()] mouth and tears into it with [user.p_their()] teeth!"), \
+						 span_danger("[src] feels unnaturally cold in my hands. You raise [src] my mouth and devour it!"))
 	playsound(user, 'sound/blank.ogg', 50, TRUE)
 
 
-	user.visible_message("<span class='warning'>Blood erupts from [user]'s arm as it reforms into a weapon!</span>", \
-						 "<span class='danger'>Icy blood pumps through my veins as my arm reforms itself!</span>")
+	user.visible_message(span_warning("Blood erupts from [user]'s arm as it reforms into a weapon!"), \
+						 span_danger("Icy blood pumps through my veins as my arm reforms itself!"))
 	user.temporarilyRemoveItemFromInventory(src, TRUE)
 	Insert(user)
 
@@ -120,7 +115,7 @@
 /obj/item/organ/heart/nightmare/Remove(mob/living/carbon/M, special = 0)
 	respawn_progress = 0
 	if(blade && special != HEART_SPECIAL_SHADOWIFY)
-		M.visible_message("<span class='warning'>\The [blade] disintegrates!</span>")
+		M.visible_message(span_warning("\The [blade] disintegrates!"))
 		QDEL_NULL(blade)
 	..()
 
@@ -146,9 +141,9 @@
 			Remove(owner, HEART_SPECIAL_SHADOWIFY)
 			old_owner.set_species(/datum/species/shadow)
 			Insert(old_owner, HEART_SPECIAL_SHADOWIFY)
-			to_chat(owner, "<span class='danger'>I feel the shadows invade my skin, leaping into the center of my chest! You're alive!</span>")
+			to_chat(owner, span_danger("I feel the shadows invade my skin, leaping into the center of my chest! You're alive!"))
 			SEND_SOUND(owner, sound('sound/blank.ogg'))
-		owner.visible_message("<span class='warning'>[owner] staggers to [owner.p_their()] feet!</span>")
+		owner.visible_message(span_warning("[owner] staggers to [owner.p_their()] feet!"))
 		playsound(owner, 'sound/blank.ogg', 50, TRUE)
 		respawn_progress = 0
 
@@ -187,7 +182,7 @@
 			var/mob/living/silicon/robot/borg = AM
 			if(!borg.lamp_cooldown)
 				borg.update_headlamp(TRUE, INFINITY)
-				to_chat(borg, "<span class='danger'>My headlamp is fried! You'll need a human to help replace it.</span>")
+				to_chat(borg, span_danger("My headlamp is fried! You'll need a human to help replace it."))
 		else
 			for(var/obj/item/O in AM)
 				if(O.light_range && O.light_power)
@@ -206,9 +201,9 @@
 		PDA.fon = FALSE
 		PDA.f_lum = 0
 		PDA.update_icon()
-		visible_message("<span class='danger'>The light in [PDA] shorts out!</span>")
+		visible_message(span_danger("The light in [PDA] shorts out!"))
 	else
-		visible_message("<span class='danger'>[O] is disintegrated by [src]!</span>")
+		visible_message(span_danger("[O] is disintegrated by [src]!"))
 		O.burn()
 	playsound(src, 'sound/blank.ogg', 50, TRUE)
 

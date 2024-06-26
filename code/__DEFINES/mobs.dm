@@ -73,6 +73,7 @@
 #define BODYPART_DISABLED_PARALYSIS 2 //either a fall or twisting the limb
 #define BODYPART_DISABLED_WOUND 3 //bone fracture
 #define BODYPART_DISABLED_ROT 4 //limb is rotten oh nooo
+#define BODYPART_DISABLED_CLAMPED 5 //limb is clamped by a hemostat or speculum
 
 #define DEFAULT_BODYPART_ICON_ORGANIC 'icons/mob/human_parts_greyscale.dmi'
 #define DEFAULT_BODYPART_ICON_ROBOTIC 'icons/mob/augmentation/augments.dmi'
@@ -452,11 +453,11 @@
 #define SKIN_COLOR_EBON_BORN "5a4a41"
 
 //HALF ORK SKIN TONES
-#define SKIN_COLOR_BLOOD_AXE "923737"
-#define SKIN_COLOR_GROONN "7B9B71"
-#define SKIN_COLOR_BLACK_HAMMER "1D341D"
+#define SKIN_COLOR_BLOOD_AXE "A84C4F"
+#define SKIN_COLOR_GROONN "50715C"
+#define SKIN_COLOR_BLACK_HAMMER "09371A"
 #define SKIN_COLOR_SHELLCREST "3C5166"
-#define SKIN_COLOR_SKULL_SEEKER "8B7871"
+#define SKIN_COLOR_SKULL_SEEKER "292413"
 
 //TIEFLING SKIN TONES
 #define SKIN_COLOR_CASTILLIAN "cc5757"

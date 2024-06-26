@@ -1,18 +1,21 @@
 /obj/item/organ/ears
 	name = "ears"
-	icon_state = "ears"
+	icon = 'icons/roguetown/items/surgery.dmi'
+	icon_state = "ear"
 	desc = ""
-	zone = BODY_ZONE_HEAD
+	zone = BODY_ZONE_PRECISE_EARS
 	slot = ORGAN_SLOT_EARS
 	gender = PLURAL
 
 	healing_factor = STANDARD_ORGAN_HEALING
 	decay_factor = STANDARD_ORGAN_DECAY
 
-	low_threshold_passed = "<span class='info'>My ears begin to resonate with an internal ring sometimes.</span>"
-	now_failing = "<span class='warning'>I are unable to hear at all!</span>"
-	now_fixed = "<span class='info'>Noise slowly begins filling my ears once more.</span>"
-	low_threshold_cleared = "<span class='info'>The ringing in my ears has died down.</span>"
+	low_threshold_passed = span_info("My ears begin to resonate with an internal ring sometimes.")
+	now_failing = span_warning("I are unable to hear at all!")
+	now_fixed = span_info("Noise slowly begins filling my ears once more.")
+	low_threshold_cleared = span_info("The ringing in my ears has died down.")
+
+	visible_organ = TRUE
 
 	// `deaf` measures "ticks" of deafness. While > 0, the person is unable
 	// to hear anything.
@@ -26,6 +29,11 @@
 	var/bang_protect = 0
 	// Multiplier for both long term and short term ear damage
 	var/damage_multiplier = 1
+
+/obj/item/organ/ears/Insert(mob/living/carbon/M, special, drop_if_replaced)
+	. = ..()
+	for(var/datum/wound/facial/ears/ear_wound as anything in M.get_wounds())
+		qdel(ear_wound)
 
 /obj/item/organ/ears/on_life()
 	if(!iscarbon(owner))
@@ -42,7 +50,7 @@
 		if(prob(damage / 20) && (damage > low_threshold))
 			adjustEarDamage(0, 4)
 			SEND_SOUND(C, sound('sound/blank.ogg'))
-			to_chat(C, "<span class='warning'>The ringing in my ears grows louder, blocking out any external noises for a moment.</span>")
+			to_chat(C, span_warning("The ringing in my ears grows louder, blocking out any external noises for a moment."))
 	else if((organ_flags & ORGAN_FAILING) && (deaf == 0))
 		deaf = 1	//stop being not deaf you deaf idiot
 
@@ -94,22 +102,7 @@
 	icon = 'icons/obj/clothing/hats.dmi'
 	icon_state = "kitty"
 	damage_multiplier = 2
-
-/obj/item/organ/ears/cat/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE)
-	..()
-	if(istype(H))
-		color = H.hair_color
-		H.dna.species.mutant_bodyparts |= "ears"
-		H.dna.features["ears"] = "Cat"
-		H.update_body()
-
-/obj/item/organ/ears/cat/Remove(mob/living/carbon/human/H,  special = 0)
-	..()
-	if(istype(H))
-		color = H.hair_color
-		H.dna.features["ears"] = "None"
-		H.dna.species.mutant_bodyparts -= "ears"
-		H.update_body()
+	accessory_type = /datum/sprite_accessory/ears/cat_big
 
 /obj/item/organ/ears/penguin
 	name = "penguin ears"
@@ -119,13 +112,13 @@
 /obj/item/organ/ears/penguin/Insert(mob/living/carbon/human/H, special = 0, drop_if_replaced = TRUE)
 	. = ..()
 	if(istype(H))
-		to_chat(H, "<span class='notice'>I suddenly feel like you've lost my balance.</span>")
+		to_chat(H, span_notice("I suddenly feel like you've lost my balance."))
 		waddle = H.AddComponent(/datum/component/waddling)
 
 /obj/item/organ/ears/penguin/Remove(mob/living/carbon/human/H,  special = 0)
 	. = ..()
 	if(istype(H))
-		to_chat(H, "<span class='notice'>My sense of balance comes back to you.</span>")
+		to_chat(H, span_notice("My sense of balance comes back to you."))
 		QDEL_NULL(waddle)
 
 /obj/item/organ/ears/bronze
@@ -152,3 +145,37 @@
 	if(. & EMP_PROTECT_SELF)
 		return
 	damage += 40/severity
+
+/obj/item/organ/ears/anthro
+	name = "wild-kin ears"
+
+/obj/item/organ/ears/vulpkanin
+	name = "vulpkian ears"
+	accessory_type = /datum/sprite_accessory/ears/fox
+
+/obj/item/organ/ears/tajaran
+	name = "tajaran ears"
+
+/obj/item/organ/ears/elf
+	name = "elf ears"
+	accessory_type = /datum/sprite_accessory/ears/elf
+
+/obj/item/organ/ears/elfw
+	name = "wood elf ears"
+	accessory_type = /datum/sprite_accessory/ears/elfw
+
+/obj/item/organ/ears/tiefling
+	name = "tiefling ears"
+	accessory_type = /datum/sprite_accessory/ears/elfw
+
+/obj/item/organ/ears/akula
+	name = "axian ears"
+	accessory_type = /datum/sprite_accessory/ears/sergal
+
+/obj/item/organ/ears/halforc
+	name = "halforc ears"
+	accessory_type = /datum/sprite_accessory/ears/halforc
+
+/obj/item/organ/ears/goblin
+	name = "goblin ears"
+	accessory_type = /datum/sprite_accessory/ears/goblin

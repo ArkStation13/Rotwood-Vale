@@ -69,7 +69,7 @@
 
 /datum/species/goblin/moon/spec_death(gibbed, mob/living/carbon/human/H)
 	new /obj/item/reagent_containers/powder/moondust_purest(get_turf(H))
-	H.visible_message("<span class='blue'>Moondust falls from [H]!</span>")
+	H.visible_message(span_blue("Moondust falls from [H]!"))
 //	qdel(H)
 
 /obj/item/bodypart/chest/goblin
@@ -106,6 +106,17 @@
 	sexes = 1
 	offset_features = list(OFFSET_HANDS = list(0,-4), OFFSET_HANDS_F = list(0,-4))
 	damage_overlay_type = ""
+	organs = list(
+		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
+		ORGAN_SLOT_HEART = /obj/item/organ/heart,
+		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
+		ORGAN_SLOT_EYES = /obj/item/organ/eyes,
+		ORGAN_SLOT_EARS = /obj/item/organ/ears,
+		ORGAN_SLOT_TONGUE = /obj/item/organ/tongue,
+		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
+		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach,
+		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
+		)
 	var/raceicon = "goblin"
 
 /datum/species/goblin/regenerate_icons(mob/living/carbon/human/H)
@@ -364,7 +375,7 @@
 	if(!in_range(src, user))
 		return
 	if(gobs >= (maxgobs+1))
-		to_chat(user, "<span class='danger'>Too many Gobs.</span>")
+		to_chat(user, span_danger("Too many Gobs."))
 		return
 	gobs++
 	var/mob/living/carbon/human/species/goblin/npc/N = new (get_turf(src))

@@ -7,7 +7,6 @@
 	attack_sound = 'sound/blank.ogg'
 	miss_sound = 'sound/blank.ogg'
 	meat = /obj/item/reagent_containers/food/snacks/meat/slab/human/mutant/ethereal
-	mutantstomach = /obj/item/organ/stomach/ethereal
 	exotic_blood = /datum/reagent/consumable/liquidelectricity //Liquid Electricity. fuck you think of something better gamer
 	siemens_coeff = 0.5 //They thrive on energy
 	brutemod = 1.25 //They're weak to punches
@@ -27,6 +26,17 @@
 	var/static/r2 = 237
 	var/static/g2 = 164
 	var/static/b2 = 149
+	organs = list(
+		ORGAN_SLOT_BRAIN = /obj/item/organ/brain,
+		ORGAN_SLOT_HEART = /obj/item/organ/heart,
+		ORGAN_SLOT_LUNGS = /obj/item/organ/lungs,
+		ORGAN_SLOT_EYES = /obj/item/organ/eyes,
+		ORGAN_SLOT_EARS = /obj/item/organ/ears,
+		ORGAN_SLOT_TONGUE = /obj/item/organ/tongue,
+		ORGAN_SLOT_LIVER = /obj/item/organ/liver,
+		ORGAN_SLOT_STOMACH = /obj/item/organ/stomach/ethereal,
+		ORGAN_SLOT_APPENDIX = /obj/item/organ/appendix,
+		)
 	//this is shit but how do i fix it? no clue.
 
 
@@ -72,7 +82,7 @@
 /datum/species/ethereal/proc/on_emp_act(mob/living/carbon/human/H, severity)
 	EMPeffect = TRUE
 	spec_updatehealth(H)
-	to_chat(H, "<span class='notice'>I feel the light of your body leave you.</span>")
+	to_chat(H, span_notice("I feel the light of your body leave you."))
 	switch(severity)
 		if(EMP_LIGHT)
 			addtimer(CALLBACK(src, PROC_REF(stop_emp), H), 10 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE) //We're out for 10 seconds
@@ -84,8 +94,8 @@
 		return
 	emageffect = TRUE
 	if(user)
-		to_chat(user, "<span class='notice'>I tap [H] on the back with your card.</span>")
-	H.visible_message("<span class='danger'>[H] starts flickering in an array of colors!</span>")
+		to_chat(user, span_notice("I tap [H] on the back with your card."))
+	H.visible_message(span_danger("[H] starts flickering in an array of colors!"))
 	handle_emag(H)
 	addtimer(CALLBACK(src, PROC_REF(stop_emag), H), 30 SECONDS) //Disco mode for 30 seconds! This doesn't affect the ethereal at all besides either annoying some players, or making someone look badass.
 
@@ -98,7 +108,7 @@
 /datum/species/ethereal/proc/stop_emp(mob/living/carbon/human/H)
 	EMPeffect = FALSE
 	spec_updatehealth(H)
-	to_chat(H, "<span class='notice'>I feel more energized as your shine comes back.</span>")
+	to_chat(H, span_notice("I feel more energized as your shine comes back."))
 
 
 /datum/species/ethereal/proc/handle_emag(mob/living/carbon/human/H)
@@ -111,7 +121,7 @@
 /datum/species/ethereal/proc/stop_emag(mob/living/carbon/human/H)
 	emageffect = FALSE
 	spec_updatehealth(H)
-	H.visible_message("<span class='danger'>[H] stops flickering and goes back to their normal state!</span>")
+	H.visible_message(span_danger("[H] stops flickering and goes back to their normal state!"))
 
 /datum/species/ethereal/proc/handle_charge(mob/living/carbon/human/H)
 	brutemod = 1.25

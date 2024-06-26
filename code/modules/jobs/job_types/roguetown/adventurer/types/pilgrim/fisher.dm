@@ -1,21 +1,11 @@
 /datum/advclass/fisher
 	name = "Fisher"
 	tutorial = "You are a fisherman, with your bag of bait and your fishing rod, you are one of few who can reliably get a stable source of meat around here"
-	allowed_sexes = list("male", "female")
-	allowed_races = list(
-		"Humen",
-		"Elf",
-		"Half-Elf",
-		"Dwarf",
-		"Tiefling",
-		"Argonian",
-		"Dark Elf",
-		"Aasimar",
-		"Half Orc"
-	)
+	allowed_sexes = list(MALE, FEMALE)
+	allowed_races = RACES_ALL_KINDS
 	outfit = /datum/outfit/job/roguetown/adventurer/fisher
-	isvillager = TRUE
-	ispilgrim = TRUE
+
+	category_tags = list(CTAG_PILGRIM, CTAG_TOWNER)
 
 /datum/outfit/job/roguetown/adventurer/fisher/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -59,7 +49,7 @@
 		armor = /obj/item/clothing/suit/roguetown/armor/workervest
 		backl = /obj/item/storage/backpack/rogue/satchel
 		belt = /obj/item/storage/belt/rogue/leather
-		backr = /obj/item/fishingrod
+		backr = /obj/item/fishingrod/fisher
 		beltr = /obj/item/cooking/pan
 		beltl = /obj/item/flint
 		backpack_contents = list(/obj/item/natural/worms = 2,/obj/item/rogueweapon/shovel/small=1)			

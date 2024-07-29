@@ -62,7 +62,7 @@
 		user.hud_used.reads.icon_state = "scroll"
 		user.hud_used.reads.show()
 		var/dat = {"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">
-					<html><head><style type=\"text/css\">
+			<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><style type=\"text/css\">
 					body { background-image:url('book.png');background-repeat: repeat; }</style></head><body scroll=yes>"}
 		dat += "[info]<br>"
 		dat += "<a href='?src=[REF(src)];close=1' style='position:absolute;right:50px'>Close</a>"
@@ -217,9 +217,6 @@
 			return
 		if(signed)
 			return
-		if(M.has_flaw(/datum/charflaw/addiction/godfearing))
-			M.add_stress(/datum/stressevent/confessedgood)
-		else
-			M.add_stress(/datum/stressevent/confessed)
+		M.add_stress(/datum/stressevent/confessed)
 		signed = M.real_name
 		info = "THE GUILTY PARTY ADMITS THEIR SIN AND THE WEAKENING OF PSYDON'S HOLY FLOCK. THEY WILL REPENT AND SUBMIT TO ANY PUNISHMENT THE CLERGY DEEMS APPROPRIATE, OR BE RELEASED IMMEDIATELY. LET THIS RECORD OF THEIR SIN WEIGH ON THE ANGEL GABRIEL'S JUDGEMENT AT THE MANY-SPIKED GATES OF HEAVEN.<br/><br/>SIGNED,<br/><font color='red'>[signed]</font>"

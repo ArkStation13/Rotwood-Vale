@@ -16,8 +16,8 @@
 	disliked_food = NONE
 	liked_food = NONE
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP | SLIME_EXTRACT
-	limbs_icon_m = 'icons/roguetown/mob/bodies/m/mt.dmi'
-	limbs_icon_f = 'icons/roguetown/mob/bodies/f/fm.dmi'
+	limbs_icon_m = 'icons/mob/species/male.dmi'
+	limbs_icon_f = 'icons/mob/species/female.dmi'
 	dam_icon = 'icons/roguetown/mob/bodies/dam/dam_male.dmi'
 	dam_icon_f = 'icons/roguetown/mob/bodies/dam/dam_female.dmi'
 	soundpack_m = /datum/voicepack/male
@@ -51,12 +51,18 @@
 		/datum/customizer/organ/horns/demihuman,
 		/datum/customizer/organ/tail/demihuman,
 		/datum/customizer/organ/testicles/human,
-		/datum/customizer/organ/penis/knotted,
+		/datum/customizer/organ/penis/canine,
 		/datum/customizer/organ/breasts/animal,
 		/datum/customizer/organ/vagina/animal,
 		)
+	body_marking_sets = list(
+		/datum/body_marking_set/none,
+		/datum/body_marking_set/socks,
+	)
 	body_markings = list(
 		/datum/body_marking/tonage,
+		/datum/body_marking/socklonger,
+		/datum/body_marking/tips,
 	)
 
 /datum/species/demihuman/check_roundstart_eligible()
@@ -114,3 +120,11 @@
 		"Lalvestine" = SKIN_COLOR_LALVESTINE,
 		"Ebon" = SKIN_COLOR_EBON,
 	)
+
+/datum/species/demihuman/get_accent(mob/living/carbon/human/H)
+    switch(H.skin_tone)
+        if(SKIN_COLOR_GRENZELHOFT) //Grenzelhoft
+            return strings("german_replacement.json", "german")
+        if(SKIN_COLOR_HAMMERHOLD) //Hammerhold
+            return strings("Anglish.json", "Anglish")
+    return null

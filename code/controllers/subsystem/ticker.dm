@@ -175,7 +175,7 @@ SUBSYSTEM_DEF(ticker)
 			for(var/client/C in GLOB.clients)
 				window_flash(C, ignorepref = TRUE) //let them know lobby has opened up.
 //			to_chat(world, span_boldnotice("Welcome to [station_name()]!"))
-			send2chat(new /datum/tgs_message_content("New round starting on [SSmapping.config.map_name]!"), CONFIG_GET(string/chat_announce_new_game))
+			send2chat(new /datum/tgs_message_content("<@&[CONFIG_GET(string/game_alert_role_id)]> Round **[GLOB.round_id]** starting on [SSmapping.config.map_name], [CONFIG_GET(string/servername)]! \nIf you wish to be pinged for game related stuff, go to <#[CONFIG_GET(string/role_assign_channel_id)]> and assign yourself the roles."), CONFIG_GET(string/channel_announce_new_game))
 			current_state = GAME_STATE_PREGAME
 			//Everyone who wants to be an observer is now spawned
 			create_observers()
@@ -242,15 +242,6 @@ SUBSYSTEM_DEF(ticker)
 				toggle_dooc(TRUE)
 				declare_completion(force_ending)
 				Master.SetRunLevel(RUNLEVEL_POSTGAME)
-			if(firstvote)
-				if(world.time > round_start_time + time_until_vote && autovote)
-					SSvote.initiate_vote("restart", "The Gods")
-					time_until_vote = 30 MINUTES
-					last_vote_time = world.time
-					firstvote = FALSE
-			else
-				if(world.time > last_vote_time + time_until_vote && autovote)
-					SSvote.initiate_vote("restart", "The Gods")
 
 /datum/controller/subsystem/ticker
 	var/last_bot_update = 0
@@ -258,7 +249,7 @@ SUBSYSTEM_DEF(ticker)
 /datum/controller/subsystem/ticker/proc/checkreqroles()
 	var/list/readied_jobs = list()
 	var/list/required_jobs = list()
-	
+
 	//var/list/required_jobs = list("Queen","King","Merchant") //JTGSZ - 4/11/2024 - This was the prev set of required jobs to go with the hardcoded checks commented out below
 
 	for(var/V in required_jobs)
@@ -272,7 +263,7 @@ SUBSYSTEM_DEF(ticker)
 							to_chat(player, span_warning("You cannot be [V] and thus are not considered."))
 							continue
 				readied_jobs.Add(V)
-		/*	
+		/*
 			// These else conditions stop the round from starting unless there is a merchant, king, and queen.
 		else
 			var/list/stuffy = list("Set a Ruler to 'high' in your class preferences to start the game!", "PLAY Ruler NOW!", "A Ruler is required to start.", "Pray for a Ruler.", "One day, there will be a Ruler.", "Just try playing Ruler.", "If you don't play Ruler, the game will never start.", "We need at least one Ruler to start the game.", "We're waiting for you to pick Ruler to start.", "Still no Ruler is readied..", "I'm going to lose my mind if we don't get a Ruler readied up.","No. The game will not start because there is no Ruler.","What's the point of ROGUETOWN without a Ruler?")
@@ -281,7 +272,7 @@ SUBSYSTEM_DEF(ticker)
 	else
 		var/list/stuffy = list("Set Merchant to 'high' in your class preferences to start the game!", "PLAY Merchant NOW!", "A Merchant is required to start.", "Pray for a Merchant.", "One day, there will be a Merchant.", "Just try playing Merchant.", "If you don't play Merchant, the game will never start.", "We need at least one Merchant to start the game.", "We're waiting for you to pick Merchant to start.", "Still no Merchant is readied..", "I'm going to lose my mind if we don't get a Merchant readied up.","No. The game will not start because there is no Merchant.","What's the point of ROGUETOWN without a Merchant?")
 		to_chat(world, span_purple("[pick(stuffy)]"))
-		return FALSE			
+		return FALSE
 	*/
 
 	/*
@@ -434,10 +425,9 @@ SUBSYSTEM_DEF(ticker)
 	for(var/I in round_start_events)
 		var/datum/callback/cb = I
 		cb.InvokeAsync()
-	
+
 	log_game("GAME SETUP: round start events success")
 	LAZYCLEARLIST(round_start_events)
-	SSrole_class_handler.RoundStart()
 	CHECK_TICK
 	if(isrogueworld)
 		for(var/obj/structure/fluff/traveltile/TT in GLOB.traveltiles)
@@ -473,8 +463,8 @@ SUBSYSTEM_DEF(ticker)
 
 //	SEND_SOUND(world, sound('sound/misc/roundstart.ogg'))
 	current_state = GAME_STATE_PLAYING
-	
-	
+
+
 	Master.SetRunLevel(RUNLEVEL_GAME)
 /*
 	if(SSevents.holidays)

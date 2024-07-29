@@ -33,7 +33,7 @@
         "love": "liebe",
         "mom": "mutter",
         "my": "mein",
-        "no ": "nein ",
+        "no": "nein",
         "old": "alt",
 		"shit": "scheiße",
         "shield": "schild",
@@ -44,7 +44,7 @@
         "sword": "schwert",
         "thanks": "danke",
         "thank you": "danke",
-        "the ": "die ",
+        "the": "die",
         "thi": "tii",
         "ugly": "hässlich",
         "very": "sehr",
@@ -72,17 +72,16 @@
 		"necromancer": "nekromant",
 		"demon": "dämon",
 		"vampire": "vampir",
-		"goblin": "kobold",
         "black": "schwarz",
         "church": "kirche",
-        "is ": "ist ",
+        "is": "ist",
         "queen": "königin",
         "bog": [
             "moor",
             "sumpf"
         ],
         "town": "stadt",
-        "an ": "eine ",
+        "an": "eine",
         "fellow": "kollege",
         "colleague": "kollege"
     }

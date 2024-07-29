@@ -57,7 +57,6 @@
 
 				if(isturf(target) && reagents.reagent_list.len && thrownby)
 					log_combat(thrownby, target, "splashed (thrown) [english_list(reagents.reagent_list)]")
-					message_admins("[ADMIN_LOOKUPFLW(thrownby)] splashed (thrown) [english_list(reagents.reagent_list)] on [target] at [ADMIN_VERBOSEJMP(target)].")
 				reagents.reaction(M, TOUCH)
 				log_combat(user, M, "splashed", R)
 				reagents.clear_reagents()
@@ -141,17 +140,6 @@
 				break
 
 
-		return
-
-	if(istype(target, /obj/machinery/crop))
-		if(!reagents.total_volume)
-			to_chat(user, span_warning("[src] is empty!"))
-			return
-		var/obj/machinery/crop/C = target
-		C.water = 100
-		reagents.clear_reagents()
-		user.visible_message(span_notice("[user] waters [target]."), \
-							span_notice("I water [target]."))
 		return
 
 	if(reagents.total_volume && user.used_intent.type == INTENT_SPLASH)
@@ -553,11 +541,10 @@
 	amount_per_transfer_from_this = 9
 	volume = 100
 	reagent_flags = OPENCONTAINER|REFILLABLE|DRAINABLE
-	possible_item_intents = list(INTENT_GENERIC)
 	spillable = TRUE
 	var/obj/item/grinded
 
-/obj/item/reagent_containers/glass/mortar/AltClick(mob/user)
+/obj/item/reagent_containers/glass/mortar/attack_self(mob/user)
 	if(grinded)
 		grinded.forceMove(drop_location())
 		grinded = null
@@ -600,7 +587,7 @@
 				to_chat(user, span_warning("[src] is full."))
 				return
 			user.visible_message(span_notice("[user] pours [I] into [src]."), \
-							span_notice("I pour I] into [src]."))
+							span_notice("I pour [I] into [src]."))
 			if(user.m_intent != MOVE_INTENT_SNEAK)
 				if(poursounds)
 					playsound(user.loc,pick(poursounds), 100, TRUE)

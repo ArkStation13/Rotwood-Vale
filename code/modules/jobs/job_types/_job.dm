@@ -44,6 +44,7 @@
 	var/minimal_player_age = 0
 
 	var/outfit = null
+	var/visuals_only_outfit = null //Handles outfits specifically for cases where you may need to prevent sensitive items from spawning. (e.g Crowns)
 	var/outfit_female = null
 
 	var/exp_requirements = 0
@@ -62,10 +63,6 @@
 
 	var/display_order = JOB_DISPLAY_ORDER_DEFAULT
 
-
-	///Levels unlocked at roundstart in physiology
-	var/list/roundstart_experience
-
 	//allowed sex/race for picking
 	var/list/allowed_sexes = list(MALE, FEMALE)
 	var/list/allowed_races = RACES_ALL_KINDS
@@ -80,6 +77,7 @@
 	var/list/jobstats
 	var/list/jobstats_f
 
+	var/job_greet_text = TRUE
 	var/tutorial = null
 
 	var/whitelist_req = FALSE
@@ -130,12 +128,6 @@
 	You will still need to contact the subsystem though
 */
 	var/list/advclass_cat_rolls
-/*
-	Basically this is just a ref to a drifter wave if its attached to one
-	The role class handler will grab relevant data out of it it uses a class select
-	Just make sure to unattach afterward we are done.
-*/
-	var/datum/drifter_wave/drifter_wave_attachment
 
 /*
 	How this works, they get one extra roll on every category per PQ amount
@@ -146,6 +138,14 @@
 /datum/job/proc/special_job_check(mob/dead/new_player/player)
 	return TRUE
 
+/datum/job/proc/greet(mob/player)
+	if(!job_greet_text)
+		return
+	to_chat(player, span_notice("You are the <b>[title]</b>"))
+	if(tutorial)
+		to_chat(player, span_notice("*-----------------*"))
+		to_chat(player, span_notice(tutorial))
+
 //Only override this proc
 //H is usually a human unless an /equip override transformed it
 /datum/job/proc/after_spawn(mob/living/H, mob/M, latejoin = FALSE)
@@ -153,17 +153,9 @@
 	if(mind_traits)
 		for(var/t in mind_traits)
 			ADD_TRAIT(H.mind, t, JOB_TRAIT)
-	var/list/roundstart_experience
 
 	if(!ishuman(H))
 		return
-
-	roundstart_experience = skills
-
-	if(roundstart_experience)
-		var/mob/living/carbon/human/experiencer = H
-		for(var/i in roundstart_experience)
-			experiencer.mind.adjust_experience(i, roundstart_experience[i], TRUE)
 
 	if(spells && H.mind)	
 		for(var/S in spells)
@@ -265,6 +257,8 @@
 
 	//Equip the rest of the gear
 	H.dna.species.before_equip_job(src, H, visualsOnly)
+	if(!outfit_override && visualsOnly && visuals_only_outfit)
+		outfit_override = visuals_only_outfit
 	if(H.gender == FEMALE)
 		if(outfit_override || outfit_female)
 			H.equipOutfit(outfit_override ? outfit_override : outfit_female, visualsOnly)

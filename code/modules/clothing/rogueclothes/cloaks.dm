@@ -508,7 +508,7 @@
 	nodismemsleeves = TRUE
 	inhand_mod = TRUE
 //	allowed_sex = list(MALE)
-	allowed_race = HUMANLIKE_RACE_TYPES
+	allowed_race = NON_DWARVEN_RACE_TYPES
 	detail_tag = "_det"
 	detail_color = CLOTHING_PURPLE
 
@@ -605,7 +605,7 @@
 	color = null
 	icon_state = "aproncook"
 	item_state = "aproncook"
-	body_parts_covered = GROIN
+	body_parts_covered = CHEST|GROIN
 	boobed = FALSE
 
 /*
@@ -672,6 +672,7 @@
 
 /obj/item/clothing/cloak/raincloak/brown
 	color = CLOTHING_BROWN
+	sellprice = 25
 
 /obj/item/clothing/cloak/raincloak/green
 	color = CLOTHING_GREEN
@@ -795,7 +796,7 @@
 	sleevetype = "shirt"
 	slot_flags = ITEM_SLOT_CLOAK
 	allowed_sex = list(MALE, FEMALE)
-	allowed_race = HUMANLIKE_RACE_TYPES
+	allowed_race = NON_DWARVEN_RACE_TYPES
 	nodismemsleeves = TRUE
 
 
@@ -823,7 +824,7 @@
 	sleevetype = "shirt"
 	slot_flags = ITEM_SLOT_CLOAK
 	allowed_sex = list(MALE, FEMALE)
-	allowed_race = HUMANLIKE_RACE_TYPES
+	allowed_race = NON_DWARVEN_RACE_TYPES
 	sellprice = 50
 	nodismemsleeves = TRUE
 
@@ -836,7 +837,7 @@
 	sleevetype = "shirt"
 	slot_flags = ITEM_SLOT_CLOAK
 	allowed_sex = list(MALE, FEMALE)
-	allowed_race = HUMANLIKE_RACE_TYPES
+	allowed_race = NON_DWARVEN_RACE_TYPES
 	sellprice = 50
 	nodismemsleeves = TRUE
 
@@ -874,7 +875,7 @@
 	icon_state = "guardcloak"
 	color = CLOTHING_RED
 	allowed_sex = list(MALE, FEMALE)
-	allowed_race = HUMANLIKE_RACE_TYPES
+	allowed_race = NON_DWARVEN_RACE_TYPES
 	inhand_mod = FALSE
 
 /obj/item/clothing/cloak/half/vet/Initialize()

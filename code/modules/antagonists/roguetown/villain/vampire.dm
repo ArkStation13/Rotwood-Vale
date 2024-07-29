@@ -162,14 +162,6 @@
 				to_chat(H, span_warning("My disguise fails!"))
 				H.vampire_undisguise(src)
 		vitae -= 1
-	else
-		to_chat(H, span_userdanger("I RAN OUT OF VITAE!"))
-		var/obj/shapeshift_holder/SS = locate() in H
-		if(SS)
-			SS.shape.dust()
-		H.dust()
-		return
-
 
 /mob/living/carbon/human/proc/disguise_button()
 	set name = "Disguise"
@@ -351,7 +343,7 @@
 	set name = "Regenerate"
 	set category = "VAMPIRE"
 	var/silver_curse_status = FALSE
-	for(var/datum/status_effect/debuff/silver_curse in status_effects)
+	for(var/datum/status_effect/debuff/silver_curse/silver_curse in status_effects)
 		silver_curse_status = TRUE
 		break
 	var/datum/antagonist/vampirelord/VD = mind.has_antag_datum(/datum/antagonist/vampirelord)

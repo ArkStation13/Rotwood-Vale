@@ -49,7 +49,7 @@
 		var/datum/antagonist/zombie/zomble = mind?.has_antag_datum(/datum/antagonist/zombie)
 		if(zomble)
 			addtimer(CALLBACK(zomble, TYPE_PROC_REF(/datum/antagonist/zombie, wake_zombie)), 5 SECONDS)
-		else if(can_death_zombify())
+		else if(can_death_zombify(src))
 			zombie_check()
 
 	if(client || mind)
@@ -108,11 +108,6 @@
 			for(var/mob/living/carbon/human/HU in viewers(7, src))
 				if(HU.marriedto == src)
 					HU.adjust_triumphs(-1)
-//				if(HU != src && !HAS_TRAIT(HU, TRAIT_BLIND))
-//					if(!HAS_TRAIT(HU, TRAIT_ANTAG))
-//						if(HU.dna?.species && dna?.species)
-//							if(HU.dna.species.id == dna.species.id)
-//								HU.add_stress(/datum/stressevent/viewdeath)
 
 	. = ..()
 

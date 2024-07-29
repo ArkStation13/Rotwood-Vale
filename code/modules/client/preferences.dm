@@ -131,6 +131,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/list/exp = list()
 	var/list/menuoptions
+	
+	var/datum/migrant_pref/migrant
 
 	var/action_buttons_screen_locs = list()
 
@@ -146,10 +148,14 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/update_mutant_colors = TRUE
 
 	var/headshot_link
+	var/list/violated = list()
+	var/list/descriptor_entries = list()
+	var/defiant = TRUE
 
 
 /datum/preferences/New(client/C)
 	parent = C
+	migrant  = new /datum/migrant_pref(src)
 
 	for(var/custom_name_id in GLOB.preferences_custom_names)
 		custom_names[custom_name_id] = get_default_name(custom_name_id)
@@ -160,7 +166,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			load_path(C.ckey)
 			unlock_content = C.IsByondMember()
 			if(unlock_content)
-				max_save_slots = 8
+				max_save_slots = 30
 	var/loaded_preferences_successfully = load_preferences()
 	if(loaded_preferences_successfully)
 		if(load_character())
@@ -199,6 +205,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	validate_customizer_entries()
 	reset_all_customizer_accessory_colors()
 	randomize_all_customizer_accessories()
+	reset_descriptors()
 
 #define APPEARANCE_CATEGORY_COLUMN "<td valign='top' width='14%'>"
 #define MAX_MUTANT_ROWS 4
@@ -238,7 +245,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=changeslot;'>Change Character</a>"
 			dat += "</td>"
 
-	
+
 			dat += "<td style='width:33%;text-align:center'>"
 			if(SStriumphs.triumph_buys_enabled)
 				dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=triumph_buy_menu'>Triumph Buy</a>"
@@ -260,9 +267,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "</td>"
 
 			dat += "<td style='width:33%;text-align:right'>"
-			if(SSrole_class_handler.drifter_queue_enabled)
-				dat += "<style>#drifter_queue {color:aliceblue;font-weight: bold;} #drifter_queue:hover{color: #eac0b9;}</style>"
-				dat += "<a id='drifter_queue' href='?_src_=prefs;preference=drifters;task=show_drifter_queue'>Special Latejoin Queue</a>"
 			dat += "</td>"
 			dat += "</tr>"
 
@@ -404,6 +408,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 			dat += "<br><b>Features:</b> <a href='?_src_=prefs;preference=customizers;task=menu'>Change</a>"
 			dat += "<br><b>Markings:</b> <a href='?_src_=prefs;preference=markings;task=menu'>Change</a>"
+			dat += "<br><b>Descriptors:</b> <a href='?_src_=prefs;preference=descriptors;task=menu'>Change</a>"
 
 			dat += "<br><b>Headshot:</b> <a href='?_src_=prefs;preference=headshot;task=input'>Change</a>"
 			if(headshot_link != null)
@@ -650,7 +655,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<a href ='?_src_=prefs;preference=keybinds;task=keybindings_set'>\[Reset to default\]</a>"
 			dat += "</body>"
 
-		
+
 	if(!IsGuestKey(user.key))
 		dat += "<a href='?_src_=prefs;preference=save'>Save</a><br>"
 		dat += "<a href='?_src_=prefs;preference=load'>Undo</a><br>"
@@ -667,16 +672,22 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			if(PLAYER_READY_TO_PLAY)
 				dat += "<a href='byond://?src=[REF(N)];ready=[PLAYER_NOT_READY]'>UNREADY</a> <b>READY</b>"
 	else
-		dat += "<a href='byond://?src=[REF(N)];late_join=1'>JOINLATE</a>"
+		if(!is_active_migrant())
+			dat += "<a href='byond://?src=[REF(N)];late_join=1'>JOINLATE</a>"
+		else
+			dat += "<a class='linkOff' href='byond://?src=[REF(N)];late_join=1'>JOINLATE</a>"
+		dat += " - <a href='?_src_=prefs;preference=migrants'>MIGRATION</a>"
+		
 	dat += "</td>"
 	dat += "<td width='33%' align='right'>"
-	dat += "<b>Be voice:</b> <a href='?_src_=prefs;preference=schizo_voice'>[(toggles & SCHIZO_VOICE) ? "Enabled":"Disabled"]</a><br>"
+	dat += "<b>Be defiant:</b> <a href='?_src_=prefs;preference=be_defiant'>[(defiant) ? "Yes":"No"]</a><br>"
+	dat += "<b>Be voice:</b> <a href='?_src_=prefs;preference=schizo_voice'>[(toggles & SCHIZO_VOICE) ? "Enabled":"Disabled"]</a>"
 	dat += "</td>"
 	dat += "</tr>"
 	dat += "</table>"
 //	dat += "<a href='?_src_=prefs;preference=reset_all'>Reset Setup</a>"
 
-	
+
 	if(user.client.is_new_player())
 		dat = list("<center>REGISTER!</center>")
 
@@ -1270,17 +1281,15 @@ Slots: [job.spawn_positions]</span>
 
 	else if(href_list["preference"] == "triumphs")
 		user.show_triumphs_list()
-	
-	else if(href_list["preference"] == "drifters")
-		switch(href_list["task"])
-			if("show_drifter_queue")
-				SSrole_class_handler.add_drifter_queue_viewer(user.client)
 
 	else if(href_list["preference"] == "playerquality")
 		check_pq_menu(user.ckey)
 
 	else if(href_list["preference"] == "markings")
 		ShowMarkings(user)
+		return
+	else if(href_list["preference"] == "descriptors")
+		show_descriptors_ui(user)
 		return
 
 	else if(href_list["preference"] == "customizers")
@@ -1376,6 +1385,10 @@ Slots: [job.spawn_positions]</span>
 			handle_body_markings_topic(user, href_list)
 			ShowChoices(user)
 			ShowMarkings(user)
+			return
+		if("change_descriptor")
+			handle_descriptors_topic(user, href_list)
+			show_descriptors_ui(user)
 			return
 		if("random")
 			switch(href_list["preference"])
@@ -1549,10 +1562,6 @@ Slots: [job.spawn_positions]</span>
 					var/list/coom = GLOB.character_flaws.Copy()
 					var/result = input(user, "Select a flaw", "Roguetown") as null|anything in coom
 					if(result)
-						if(result == "Love-Fiend")
-							if(!user.can_do_sex())
-								coom -= "Love-Fiend"
-								result = pick(coom)
 						result = coom[result]
 						var/datum/charflaw/C = new result()
 						charflaw = C
@@ -1901,6 +1910,13 @@ Slots: [job.spawn_positions]</span>
 				if("widescreenpref")
 					widescreenpref = !widescreenpref
 					user.client.change_view(CONFIG_GET(string/default_view))
+				
+				if("be_defiant")
+					defiant = !defiant
+					if(defiant)
+						to_chat(user, span_notice("You will now have resistance from people violating you, but be punished for trying to violate others. This is not full protection."))
+					else
+						to_chat(user, span_boldwarning("You fully immerse yourself in the grim experience, waiving your resistance from people violating you, but letting you do the same unto other non-defiants"))
 
 				if("schizo_voice")
 					toggles ^= SCHIZO_VOICE
@@ -1910,6 +1926,10 @@ Slots: [job.spawn_positions]</span>
 										Good voices will be rewarded with PQ for answering meditations, while bad ones are punished at the discretion of jannies.</span>")
 					else
 						to_chat(user, span_warning("You are no longer a voice."))
+				
+				if("migrants")
+					migrant.show_ui()
+					return
 
 				if("save")
 					save_preferences()
@@ -2015,7 +2035,7 @@ Slots: [job.spawn_positions]</span>
 	character.skin_tone = skin_tone
 	character.hairstyle = hairstyle
 	character.facial_hairstyle = facial_hairstyle
-	character.underwear = underwear
+	//character.underwear = underwear
 //	character.underwear_color = underwear_color
 	character.undershirt = undershirt
 //	character.accessory = accessory
@@ -2023,6 +2043,7 @@ Slots: [job.spawn_positions]</span>
 	character.socks = socks
 	character.set_patron(selected_patron)
 	character.backpack = backpack
+	character.defiant = defiant
 
 	character.jumpsuit_style = jumpsuit_style
 
@@ -2119,5 +2140,12 @@ Slots: [job.spawn_positions]</span>
 	if(find_index != 9)
 		if(!silent)
 			to_chat(usr, "<span class='warning'>The image must be hosted on one of the following sites: 'Gyazo, Lensdump, Imgbox, Catbox'</span>")
+		return FALSE
+	return TRUE
+
+/datum/preferences/proc/is_active_migrant()
+	if(!migrant)
+		return FALSE
+	if(!migrant.active)
 		return FALSE
 	return TRUE

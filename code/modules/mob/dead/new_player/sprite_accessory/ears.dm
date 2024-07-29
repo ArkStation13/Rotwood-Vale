@@ -50,6 +50,12 @@
 	color_keys = 2
 	color_key_names = list("Ears", "Inner")
 
+/datum/sprite_accessory/ears/bunny_perky
+	name = "Bunny (Perky)"
+	icon_state = "bunny_perky"
+	color_keys = 3
+	color_key_names = list("Ears", "Inner", "Tips")
+
 /datum/sprite_accessory/ears/cat_big
 	name = "Cat, Big"
 	icon_state = "catbig"
@@ -104,6 +110,12 @@
 	color_keys = 2
 	color_key_names = list("Ears", "Inner")
 
+/datum/sprite_accessory/ears/vulp
+	name = "Vulp"
+	icon_state = "vulp"
+	color_keys = 2
+	color_key_names = list("Ears", "Inner")
+
 /datum/sprite_accessory/ears/husky
 	name = "Husky"
 	icon_state = "wolf"
@@ -138,12 +150,6 @@
 
 /datum/sprite_accessory/ears/rabbit
 	name = "Rabbit"
-	icon_state = "rabbit"
-	color_keys = 2
-	color_key_names = list("Ears", "Inner")
-
-/datum/sprite_accessory/ears/rabbit_lop
-	name = "Rabbit (Loped)"
 	icon_state = "rabbitlop"
 	color_keys = 2
 	color_key_names = list("Ears", "Inner")
@@ -157,6 +163,12 @@
 /datum/sprite_accessory/ears/sergal
 	name = "Sergal"
 	icon_state = "sergal"
+	color_keys = 2
+	color_key_names = list("Ears", "Inner")
+
+/datum/sprite_accessory/ears/shark
+	name = "Shark"
+	icon_state = "shark"
 	color_keys = 2
 	color_key_names = list("Ears", "Inner")
 

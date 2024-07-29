@@ -74,7 +74,7 @@
   * This proc is dangerously laggy, avoid it or die
   */
 /proc/stars(n, pr)
-	n = html_encode(n)
+	n = strip_html_simple(n)
 	if (pr == null)
 		pr = 25
 	if (pr <= 0)
@@ -84,27 +84,27 @@
 			return n
 	var/te = n
 	var/t = ""
-	n = length(n)
+	n = length_char(n)
 
 	for(var/p = 1 to min(n,MAX_BROADCAST_LEN))
-		if ((copytext(te, p, p + 1) == " " || prob(pr)))
-			t = text("[][]", t, copytext(te, p, p + 1))
+		if ((copytext_char(te, p, p + 1) == " " || prob(pr)))
+			t = text("[][]", t, copytext_char(te, p, p + 1))
 		else
 			t = text("[]*", t)
 	if(n > MAX_BROADCAST_LEN)
 		t += "..." //signals missing text
-	return sanitize(t)
+	return t
 /**
   * Makes you speak like you're drunk
   */
 /proc/slur(n)
-	var/phrase = html_decode(n)
-	var/leng = length(phrase)
-	var/counter=length(phrase)
+	var/phrase = strip_html_simple(n)
+	var/leng = length_char(phrase)
+	var/counter=length_char(phrase)
 	var/newphrase=""
 	var/newletter=""
 	while(counter>=1)
-		newletter=copytext(phrase,(leng-counter)+1,(leng-counter)+2)
+		newletter=copytext_char(phrase,(leng-counter)+1,(leng-counter)+2)
 		if(rand(1,3)==3)
 			if(lowertext(newletter)=="o")
 				newletter="u"
@@ -133,13 +133,13 @@
 
 /// Makes you talk like you got cult stunned, which is slurring but with some dark messages
 /proc/cultslur(n) // Inflicted on victims of a stun talisman
-	var/phrase = html_decode(n)
-	var/leng = length(phrase)
-	var/counter=length(phrase)
+	var/phrase = strip_html_simple(n)
+	var/leng = length_char(phrase)
+	var/counter=length_char(phrase)
 	var/newphrase=""
 	var/newletter=""
 	while(counter>=1)
-		newletter=copytext(phrase,(leng-counter)+1,(leng-counter)+2)
+		newletter=copytext_char(phrase,(leng-counter)+1,(leng-counter)+2)
 		if(rand(1,2)==2)
 			if(lowertext(newletter)=="o")
 				newletter="u"
@@ -175,13 +175,13 @@
 
 ///Adds stuttering to the message passed in
 /proc/stutter(n)
-	var/te = html_decode(n)
+	var/te = strip_html_simple(n)
 	var/t = ""//placed before the message. Not really sure what it's for.
-	n = length(n)//length of the entire word
+	n = length_char(n)//length_char of the entire word
 	var/p = null
 	p = 1//1 is the start of any word
-	while(p <= n)//while P, which starts at 1 is less or equal to N which is the length.
-		var/n_letter = copytext(te, p, p + 1)//copies text from a certain distance. In this case, only one letter at a time.
+	while(p <= n)//while P, which starts at 1 is less or equal to N which is the length_char.
+		var/n_letter = copytext_char(te, p, p + 1)//copies text from a certain distance. In this case, only one letter at a time.
 		if (prob(80) && (ckey(n_letter) in list("b","c","d","f","g","h","j","k","l","m","n","p","q","r","s","t","v","w","x","y","z")))
 			if (prob(10))
 				n_letter = text("[n_letter]-[n_letter]-[n_letter]-[n_letter]")//replaces the current letter with this instead.
@@ -195,19 +195,19 @@
 						n_letter = text("[n_letter]-[n_letter]")
 		t = text("[t][n_letter]")//since the above is ran through for each letter, the text just adds up back to the original word.
 		p++//for each letter p is increased to find where the next letter will be.
-	return copytext(sanitize(t),1,MAX_MESSAGE_LEN)
+	return copytext_char(t,1,MAX_MESSAGE_LEN)
 
 ///Convert a message to derpy speak
 /proc/derpspeech(message, stuttering)
-	message = replacetext(message, " am ", " ")
-	message = replacetext(message, " is ", " ")
-	message = replacetext(message, " are ", " ")
-	message = replacetext(message, "you", "u")
-	message = replacetext(message, "help", "halp")
-	message = replacetext(message, "grief", "grife")
-	message = replacetext(message, "space", "spess")
-	message = replacetext(message, "carp", "crap")
-	message = replacetext(message, "reason", "raisin")
+	message = replacetext_char(message, " am ", " ")
+	message = replacetext_char(message, " is ", " ")
+	message = replacetext_char(message, " are ", " ")
+	message = replacetext_char(message, "you", "u")
+	message = replacetext_char(message, "help", "halp")
+	message = replacetext_char(message, "grief", "grife")
+	message = replacetext_char(message, "space", "spess")
+	message = replacetext_char(message, "carp", "crap")
+	message = replacetext_char(message, "reason", "raisin")
 	if(prob(50))
 		message = uppertext(message)
 		message += "[stutter(pick("!", "!!", "!!!"))]"
@@ -222,7 +222,7 @@
   */
 /proc/Gibberish(text, replace_characters = FALSE, chance = 50)
 	. = ""
-	for(var/i in 1 to length(text))
+	for(var/i in 1 to length_char(text))
 		var/letter = text[i]
 		if(prob(chance))
 			if(replace_characters)
@@ -244,15 +244,15 @@
 /proc/ninjaspeak(n) //NINJACODE
 	var/te = html_decode(n)
 	var/t = ""
-	n = length(n)
+	n = length_char(n)
 	var/p = 1
 	while(p <= n)
 		var/n_letter
 		var/n_mod = rand(1,4)
 		if(p+n_mod>n+1)
-			n_letter = copytext(te, p, n+1)
+			n_letter = copytext_char(te, p, n+1)
 		else
-			n_letter = copytext(te, p, p+n_mod)
+			n_letter = copytext_char(te, p, p+n_mod)
 		if (prob(50))
 			if (prob(30))
 				n_letter = text("[n_letter]-[n_letter]-[n_letter]")
@@ -262,7 +262,7 @@
 			n_letter = text("[n_letter]")
 		t = text("[t][n_letter]")
 		p=p+n_mod
-	return copytext(sanitize(t),1,MAX_MESSAGE_LEN)
+	return copytext_char(sanitize(t),1,MAX_MESSAGE_LEN)
 
 ///Shake the camera of the person viewing the mob SO REAL!
 /proc/shake_camera(mob/M, duration, strength=1)
@@ -964,3 +964,19 @@
 ///Can the mob see reagents inside of containers?
 /mob/proc/can_see_reagents()
 	return stat == DEAD || has_unlimited_silicon_privilege //Dead guys and silicons can always see reagents
+
+/mob/proc/get_role_title()
+	var/used_title
+	if(migrant_type)
+		var/datum/migrant_role/migrant = MIGRANT_ROLE(migrant_type)
+		used_title = migrant.name
+		if(migrant.advjob_examine && advjob)
+			used_title = advjob
+	else if(job)
+		var/datum/job/J = SSjob.GetJob(job)
+		used_title = J.title
+		if(J.f_title && (gender == FEMALE))
+			used_title = J.f_title
+		if(J.advjob_examine)
+			used_title = advjob
+	return used_title

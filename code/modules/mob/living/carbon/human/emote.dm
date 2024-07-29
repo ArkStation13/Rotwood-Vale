@@ -74,6 +74,7 @@
 	key = "grumble"
 	key_third_person = "grumbles"
 	message = "grumbles."
+	message_muffled = "makes a grumbling noise."
 	emote_type = EMOTE_AUDIBLE
 
 /mob/living/carbon/human/verb/emote_grumble()
@@ -81,13 +82,6 @@
 	set category = "Noises"
 
 	emote("grumble", intentional = TRUE)
-
-/datum/emote/living/carbon/human/grumble/can_run_emote(mob/living/user, status_check = TRUE , intentional)
-	. = ..()
-	if(. && iscarbon(user))
-		var/mob/living/carbon/C = user
-		if(C.silent || !C.can_speak())
-			message = "makes a muffled grumbling noise."
 
 /datum/emote/living/carbon/human/handshake
 	key = "handshake"
@@ -137,7 +131,7 @@
 	var/mob/living/carbon/human/H = user
 	if(!istype(H) || !H.dna || !H.dna.species || !H.dna.species.can_wag_tail(H))
 		return
-	if(!H.dna.species.is_wagging_tail())
+	if(!H.dna.species.is_wagging_tail(H))
 		H.dna.species.start_wagging_tail(H)
 	else
 		H.dna.species.stop_wagging_tail(H)
@@ -153,7 +147,7 @@
 	var/mob/living/carbon/human/H = user
 	if(!H.dna || !H.dna.species)
 		return
-	if(H.dna.species.is_wagging_tail())
+	if(H.dna.species.is_wagging_tail(H))
 		. = null
 
 /datum/emote/living/carbon/human/wing

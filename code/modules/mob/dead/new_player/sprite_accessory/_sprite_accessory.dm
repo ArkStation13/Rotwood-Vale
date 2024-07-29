@@ -177,6 +177,8 @@
 			return "ADJ"
 		if(BODY_BEHIND_LAYER)
 			return "BEHIND"
+		if(BODY_UNDER_LAYER)
+			return "UNDER"
 		else
 			CRASH("Tried to get an unimplemented layer suffix for sprite accessory of type [type]")
 
@@ -191,7 +193,7 @@
 			color = default_colors[i]
 		else
 			var/used_define
-			if(length(color_key_defaults) >= i)
+			if(length(color_key_defaults) >= i && color_key_defaults[i] != null)
 				used_define = color_key_defaults[i]
 			else
 				used_define = default_define_for_color_key(i)

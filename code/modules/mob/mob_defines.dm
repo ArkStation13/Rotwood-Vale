@@ -168,6 +168,8 @@
 
 	/// What job does this mob have
 	var/job = null//Living
+	var/migrant_type = null
+	var/advjob = null
 
 	/// A list of factions that this mob is currently in, for hostile mob targetting, amongst other things
 	var/list/faction = list("neutral")
@@ -270,6 +272,7 @@
 	var/last_dodge = 0
 	var/last_parry = 0
 	var/next_emote = 0
+	var/next_me_emote = 0
 	var/lastpoint = 0
 
 	var/mobid = 0 //incremented on spawn
@@ -282,3 +285,5 @@
 	var/list/mob_timers = list()
 
 	var/music_playing = FALSE
+	/// Tracker for amount of turfs we sprinted over, for things like bumping and charging
+	var/sprinted_tiles = 0

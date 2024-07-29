@@ -25,8 +25,11 @@
 	icon_state = "basichood"
 	item_state = "basichood"
 	icon = 'icons/roguetown/clothing/head.dmi'
+	mob_overlay_icon = 'icons/roguetown/clothing/onmob/head.dmi' //Overrides slot icon behavior
 	body_parts_covered = NECK
-	slot_flags = ITEM_SLOT_HEAD
+	slot_flags = ITEM_SLOT_HEAD|ITEM_SLOT_MASK
+	sleevetype = null
+	sleeved = null
 	dynamic_hair_suffix = ""
 	edelay_type = 1
 	adjustable = CAN_CADJUST
@@ -127,7 +130,7 @@
 	sewrepair = TRUE
 
 /obj/item/clothing/head/roguetown/priestmask/pickup(mob/living/user)
-	if((user.job != "Priest") && (user.job != "Priestess"))
+	if(!HAS_TRAIT(user, TRAIT_CHOSEN))
 		to_chat(user, "<font color='yellow'>UNWORTHY HANDS TOUCH THE VISAGE, CEASE OR BE PUNISHED</font>")
 		spawn(30)
 			if(loc == user)
@@ -145,7 +148,7 @@
 	..()
 
 /obj/item/clothing/head/roguetown/roguehood/mage/Initialize()
-	color = pick("#4756d8", "#759259", "#bf6f39", "#c1b144")
+	color = pick("#4756d8", "#759259", "#bf6f39", "#c1b144", "#b8252c")
 	..()
 
 /obj/item/clothing/head/roguetown/roguehood/AdjustClothes(mob/user)
@@ -327,7 +330,17 @@
 	. = ..()
 	SSroguemachine.crown = src
 
-/obj/item/clothing/head/roguetown/crown/serpcrown/surplus
+/obj/item/clothing/head/roguetown/crown/serpcrown/proc/anti_stall()
+	src.visible_message(span_warning("The Crown of Rockhill crumbles to dust, the ashes spiriting away in the direction of the Keep."))
+	SSroguemachine.crown = null //Do not harddel.
+	qdel(src) //Anti-stall
+
+/obj/item/clothing/head/roguetown/crown/fakecrown
+	name = "fake crown"
+	desc = "You shouldn't be seeing this."
+	icon_state = "serpcrown"
+
+/obj/item/clothing/head/roguetown/crown/surplus
 	name = "crown"
 	icon_state = "serpcrowno"
 	sellprice = 100
@@ -678,16 +691,28 @@
 	icon_state = "wizardhat"
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/64x64/head.dmi'
 	dynamic_hair_suffix = "+generic"
-	sellprice = 100
 	worn_x_dimension = 64
 	worn_y_dimension = 64
 	sewrepair = TRUE
+
+/obj/item/clothing/head/roguetown/wizhat/red
+	icon_state = "wizardhatred"
+
+/obj/item/clothing/head/roguetown/wizhat/yellow
+	icon_state = "wizardhatyellow"
+
+/obj/item/clothing/head/roguetown/wizhat/green
+	icon_state = "wizardhatgreen"
+
+/obj/item/clothing/head/roguetown/wizhat/black
+	icon_state = "wizardhatblack"
 
 /obj/item/clothing/head/roguetown/wizhat/gen
 	icon_state = "wizardhatgen"
 
 /obj/item/clothing/head/roguetown/wizhat/gen/wise
 	name = "wise hat"
+	sellprice = 100
 	desc = "Only the wisest of nimrods wear this."
 
 /obj/item/clothing/head/roguetown/wizhat/gen/wise/equipped(mob/user, slot)
@@ -722,3 +747,60 @@
 	sellprice = 100
 	resistance_flags = FIRE_PROOF
 	anvilrepair = /datum/skill/craft/armorsmithing
+
+/obj/item/clothing/head/roguetown/grenzelhofthat
+	name = "grenzelhoft plume hat"
+	desc = "Slaying monsters or fair maidens: Grenzelhoft stands."
+	icon_state = "grenzelhat"
+	item_state = "grenzelhat"
+	icon = 'icons/roguetown/clothing/head.dmi'
+	sleeved = 'icons/roguetown/clothing/onmob/helpers/stonekeep_merc.dmi'
+	slot_flags = ITEM_SLOT_HEAD
+	detail_tag = "_detail"
+	dynamic_hair_suffix = ""
+	max_integrity = 150
+	colorgrenz = TRUE
+
+/obj/item/clothing/head/roguetown/grenzelhofthat/update_icon()
+	cut_overlays()
+	if(get_detail_tag())
+		var/mutable_appearance/pic = mutable_appearance(icon(icon, "[icon_state][detail_tag]"))
+		pic.appearance_flags = RESET_COLOR
+		if(get_detail_color())
+			pic.color = get_detail_color()
+		add_overlay(pic)
+
+/obj/item/clothing/head/roguetown/helmet/tricorn
+	slot_flags = ITEM_SLOT_HEAD
+	name = "tricorn"
+	desc = ""
+	body_parts_covered = HEAD|HAIR|EARS|NOSE
+	icon_state = "tricorn"
+	armor = list("blunt" = 47, "slash" = 27, "stab" = 37, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
+	prevent_crits = list(BCLASS_BLUNT, BCLASS_TWIST)
+	anvilrepair = null
+	smeltresult = null
+	sewrepair = TRUE
+	blocksound = SOFTHIT
+
+/obj/item/clothing/head/roguetown/helmet/tricorn/skull
+	icon_state = "tricorn_skull"
+	desc = "It has a skull sewn onto it. Clear sign of piracy"
+
+/obj/item/clothing/head/roguetown/helmet/tricorn/lucky
+	name = "lucky tricorn"
+	desc = "A weathered tricorn that has seen many skirmishes. You'd feel lucky with this on your head."
+	armor = list("blunt" = 60, "slash" = 40, "stab" = 45, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
+
+/obj/item/clothing/head/roguetown/helmet/bandana
+	slot_flags = ITEM_SLOT_HEAD
+	name = "bandana"
+	desc = ""
+	body_parts_covered = HEAD|HAIR|EARS|NOSE
+	icon_state = "bandana"
+	armor = list("blunt" = 47, "slash" = 27, "stab" = 37, "bullet" = 0, "laser" = 0,"energy" = 0, "bomb" = 0, "bio" = 0, "rad" = 0, "fire" = 0, "acid" = 0)
+	prevent_crits = list(BCLASS_BLUNT, BCLASS_TWIST)
+	anvilrepair = null
+	smeltresult = null
+	sewrepair = TRUE
+	blocksound = SOFTHIT

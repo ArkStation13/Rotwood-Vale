@@ -8,12 +8,14 @@
 	/datum/species/tieberian,\
 	/datum/species/aasimar,\
 	/datum/species/lizardfolk,\
+	/datum/species/lupian,\
 	/datum/species/tabaxi,\
 	/datum/species/vulpkanin,\
 	/datum/species/akula,\
 	/datum/species/moth,\
 	/datum/species/dracon,\
 	/datum/species/anthromorph,\
+	/datum/species/anthromorphsmall,\
 	/datum/species/demihuman,\
 	/datum/species/halforc,\
 	/datum/species/kobold,\
@@ -26,6 +28,7 @@
 	/datum/species/human/halfelf,\
 	/datum/species/dwarf/mountain,\
 	/datum/species/aasimar,\
+	/datum/species/lupian,\
 	/datum/species/vulpkanin,\
 	/datum/species/moth,\
 	/datum/species/dracon,
@@ -41,6 +44,7 @@
 
 #define RACES_SHUNNED \
 	/datum/species/halforc,\
+	/datum/species/anthromorphsmall,\
 	/datum/species/kobold
 
 #define RACES_DESPISED \
@@ -61,12 +65,14 @@
 	/datum/species/tieberian,\
 	/datum/species/aasimar,\
 	/datum/species/lizardfolk,\
+	/datum/species/lupian,\
 	/datum/species/tabaxi,\
 	/datum/species/vulpkanin,\
 	/datum/species/akula,\
 	/datum/species/moth,\
 	/datum/species/dracon,\
 	/datum/species/anthromorph,\
+	/datum/species/anthromorphsmall,\
 	/datum/species/demihuman,\
 	/datum/species/kobold,\
 	/datum/species/goblinp,\
@@ -81,12 +87,14 @@
 	/datum/species/tieberian,\
 	/datum/species/aasimar,\
 	/datum/species/lizardfolk,\
+	/datum/species/lupian,\
 	/datum/species/tabaxi,\
 	/datum/species/vulpkanin,\
 	/datum/species/akula,\
 	/datum/species/moth,\
 	/datum/species/dracon,\
 	/datum/species/anthromorph,\
+	/datum/species/anthromorphsmall,\
 	/datum/species/demihuman,\
 	/datum/species/halforc,\
 	/datum/species/kobold,\
@@ -101,6 +109,7 @@
 	/datum/species/tieberian,\
 	/datum/species/aasimar,\
 	/datum/species/lizardfolk,\
+	/datum/species/lupian,\
 	/datum/species/tabaxi,\
 	/datum/species/vulpkanin,\
 	/datum/species/akula,\
@@ -116,6 +125,7 @@
 	/datum/species/tieberian,\
 	/datum/species/aasimar,\
 	/datum/species/lizardfolk,\
+	/datum/species/lupian,\
 	/datum/species/tabaxi,\
 	/datum/species/vulpkanin,\
 	/datum/species/akula,\
@@ -178,7 +188,7 @@ GLOBAL_LIST_EMPTY(job_respawn_delays)
 
 /*
 	Formerly bitflags, now we are strings
-	Currently used for classes, I could have used these for drifters tho
+	Currently used for classes
 */
 
 #define CTAG_ALLCLASS		"CAT_ALLCLASS"		// jus a define for allclass to not deal with actively typing strings
@@ -189,16 +199,6 @@ GLOBAL_LIST_EMPTY(job_respawn_delays)
 #define CTAG_ANTAG 			"CAT_ANTAG"  		// Antag class - results in an antag
 #define CTAG_BANDIT			"CAT_BANDIT"		// Bandit class - Tied to the bandit antag really
 #define CTAG_CHALLENGE 		"CAT_CHALLENGE"  	// Challenge class - Meant to be free for everyone
-
-/*
-	String category tags
-	This time for the drifter waves, used for sorting and scheduling purposes
-*/
-#define DTAG_ALLWAVES		"CAT_ALLWAVES"		// Another define for jus the basic allclass
-#define DTAG_DISABLED		"CAT_DISABLED"		// Disabled, do not use
-#define DTAG_FILLERS		"CAT_FILLER"		// If we have nothing better to do, time for filler
-#define DTAG_ANTAGS			"CAT_ANTAGS"		// A catchall for antag groups
-#define DTAG_BANDITS		"CAT_BANDITS"		// some bandits I guess
 
 /*
 	Defines for the triumph buy datum categories

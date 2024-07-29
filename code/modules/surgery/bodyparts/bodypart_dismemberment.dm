@@ -69,7 +69,7 @@
 	if(dam_type == BURN)
 		burn()
 		return TRUE
-	
+
 	var/turf/location = C.loc
 	if(istype(location))
 		C.add_splatter_floor(location)
@@ -99,21 +99,6 @@
 	add_wound(/datum/wound/slash/disembowel)
 	return TRUE
 
-/obj/item/bodypart/head/dismember(dam_type = BRUTE, bclass = BCLASS_CUT, mob/living/user, zone_precise = src.body_zone)
-	var/mob/living/carbon/was_owner = owner
-	var/datum/mind/ihaveamind = owner?.mind
-	. = ..()
-	if(. && was_owner && ihaveamind && !HAS_TRAIT(was_owner, TRAIT_IWASHAUNTED) && hasomen(OMEN_NOPRIEST))
-		var/drop_location = was_owner.drop_location()
-		if(!drop_location) //how the fuck?
-			return
-		ADD_TRAIT(was_owner, TRAIT_IWASHAUNTED, OMEN_NOPRIEST)
-		var/mob/living/simple_animal/hostile/rogue/haunt/omen/haunt = new(drop_location)
-		var/haunt_name = real_name ? "omen of [real_name]" : "omen"
-		haunt.name = haunt_name
-		haunt.real_name = haunt_name
-		ihaveamind.transfer_to(haunt, force_key_move = TRUE)
-	
 //limb removal. The "special" argument is used for swapping a limb with a new one without the effects of losing a limb kicking in.
 /obj/item/bodypart/proc/drop_limb(special)
 	if(!owner)
@@ -371,7 +356,7 @@
 	for(var/datum/wound/wound as anything in wounds)
 		wounds -= wound
 		wound.apply_to_bodypart(src, silent = TRUE, crit_message = FALSE)
-	
+
 	var/obj/item/bodypart/affecting = C.get_bodypart(BODY_ZONE_CHEST)
 	if(affecting && dismember_wound)
 		affecting.remove_wound(dismember_wound)

@@ -7,13 +7,14 @@
 	category_tags = list(CTAG_ADVENTURER)
 
 /datum/outfit/job/roguetown/adventurer/mage
-	allowed_patrons = list(/datum/patron/divine/noc)
+	allowed_patrons = list(/datum/patron/divine/noc, /datum/patron/inhumen/zizo)
 
 /datum/outfit/job/roguetown/adventurer/mage/pre_equip(mob/living/carbon/human/H)
 	..()
 	head = /obj/item/clothing/head/roguetown/roguehood/mage
 	shoes = /obj/item/clothing/shoes/roguetown/simpleshoes
 	pants = /obj/item/clothing/under/roguetown/trou/leather
+	shirt = /obj/item/clothing/suit/roguetown/shirt/shortshirt
 	armor = /obj/item/clothing/suit/roguetown/shirt/robe/mage
 	belt = /obj/item/storage/belt/rogue/leather/rope
 	beltr = /obj/item/reagent_containers/glass/bottle/rogue/manapot

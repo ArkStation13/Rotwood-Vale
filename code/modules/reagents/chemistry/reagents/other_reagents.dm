@@ -160,7 +160,7 @@
 	taste_description = "lead"
 
 /datum/reagent/water/gross/on_mob_life(mob/living/carbon/M)
-	if(!HAS_TRAIT(M, TRAIT_NASTY_EATER))
+	if(!HAS_TRAIT(M, TRAIT_NASTY_EATER) && !HAS_TRAIT(M, TRAIT_WILD_EATER))
 		M.adjustToxLoss(1)
 		M.add_nausea(50)
 	return ..()
@@ -209,6 +209,10 @@
 	if(reac_volume >= 5)
 //		T.MakeSlippery(TURF_WET_WATER, reac_volume*1.5 SECONDS, reac_volume*1.5 SECONDS)
 		T.add_water(reac_volume * 3) //nuproc
+	
+	var/obj/structure/soil/soil = get_soil_on_turf(T)
+	if(soil)
+		soil.adjust_water(reac_volume)
 
 //	for(var/mob/living/simple_animal/slime/M in T)
 //		M.apply_water()

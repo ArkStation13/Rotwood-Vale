@@ -73,8 +73,6 @@ All foods are distributed among various categories. Use common sense.
 	var/rotprocess = FALSE
 	var/become_rot_type = null
 
-	var/mill_result = null
-
 	var/fertamount = 50
 
 	drop_sound = 'sound/foley/dropsound/food_drop.ogg'
@@ -220,11 +218,7 @@ All foods are distributed among various categories. Use common sense.
 		return
 
 	if(eat_effect)
-		if(islist(eat_effect))
-			for(var/effect in eat_effect)
-				eater.apply_status_effect(effect)
-		else
-			eater.apply_status_effect(eat_effect)
+		eater.apply_status_effect(eat_effect)
 	eater.taste(reagents)
 
 	if(!reagents.total_volume)

@@ -6,14 +6,14 @@
 	total_positions = -1
 	spawn_positions = -1
 	allowed_races = RACES_ALL_KINDS
-	tutorial = "Pilgrims begin far outside of the town and must reach it in order to ply their various trades. Sometimes, they build their own settlements and enjoy the terrible nature."
+	tutorial = "Fleeing misfortune you head your way towards Rockhill, you're not a soldier or an explorer, but a humble migrant trying to look for a better life, if you get to survive the trip that is."
 
 	outfit = null
 	outfit_female = null
 	bypass_lastclass = TRUE
 	bypass_jobban = FALSE
 
-	advclass_cat_rolls = list(CTAG_PILGRIM = 5)
+	advclass_cat_rolls = list(CTAG_PILGRIM = 10)
 	PQ_boost_divider = 10
 
 	display_order = JDO_PILGRIM

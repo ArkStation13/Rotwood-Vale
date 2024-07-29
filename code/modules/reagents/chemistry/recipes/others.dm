@@ -42,7 +42,7 @@
 	required_reagents = list(/datum/reagent/consumable/cornoil = 3, /datum/reagent/toxin/acid = 1)
 
 /datum/chemical_reaction/sodiumchloride
-	name = "Sodium Chloride"
+	name = "Salt"
 	id = /datum/reagent/consumable/sodiumchloride
 	results = list(/datum/reagent/consumable/sodiumchloride = 3)
 	required_reagents = list(/datum/reagent/water = 1, /datum/reagent/sodium = 1, /datum/reagent/chlorine = 1)
@@ -681,15 +681,6 @@
 	results = list(/datum/reagent/yuck = 4)
 	required_reagents = list(/datum/reagent/fuel = 3)
 	required_container = /obj/item/reagent_containers/food/snacks/deadmouse
-
-
-/datum/chemical_reaction/slimejelly
-	name = "artificial slime jelly"
-	id = /datum/reagent/toxin/slimejelly
-	results = list(/datum/reagent/toxin/slimejelly = 5)
-	required_reagents = list(/datum/reagent/fuel/oil = 3, /datum/reagent/uranium/radium = 2, /datum/reagent/consumable/tinlux =1)
-	required_container = /obj/item/reagent_containers/food/snacks/grown/mushroom/glowshroom
-	mix_message = "The mushroom's insides bubble and pop and it becomes very limp."
 
 /datum/chemical_reaction/slime_extractification
 	name = "slime extractification"

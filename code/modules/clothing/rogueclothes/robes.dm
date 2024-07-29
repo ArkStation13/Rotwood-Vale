@@ -24,7 +24,6 @@
 	sleeved = null
 	boobed = TRUE
 	color = null
-	flags_inv = HIDEBOOB
 	r_sleeve_status = SLEEVE_NORMAL
 	l_sleeve_status = SLEEVE_NORMAL
 
@@ -39,7 +38,6 @@
 	sleeved = null
 	boobed = TRUE
 	color = null
-	flags_inv = HIDEBOOB
 	r_sleeve_status = SLEEVE_NORMAL
 	l_sleeve_status = SLEEVE_NORMAL
 
@@ -54,7 +52,6 @@
 	sleeved = null
 	boobed = TRUE
 	color = null
-	flags_inv = HIDEBOOB
 	r_sleeve_status = SLEEVE_NORMAL
 	l_sleeve_status = SLEEVE_NORMAL
 
@@ -69,7 +66,6 @@
 	sleeved = null
 	boobed = TRUE
 	color = null
-	flags_inv = HIDEBOOB
 	r_sleeve_status = SLEEVE_NORMAL
 	l_sleeve_status = SLEEVE_NORMAL
 
@@ -84,7 +80,6 @@
 	sleeved = 'icons/roguetown/clothing/onmob/helpers/sleeves_armor.dmi'
 	boobed = TRUE
 	color = null
-	flags_inv = HIDEBOOB
 	r_sleeve_status = SLEEVE_NORMAL
 	l_sleeve_status = SLEEVE_NORMAL
 
@@ -101,7 +96,7 @@
 	color = null
 
 /obj/item/clothing/suit/roguetown/shirt/robe/priest/pickup(mob/living/user)
-	if((user.job != "Priest") && (user.job != "Priestess"))
+	if(!HAS_TRAIT(user, TRAIT_CHOSEN))
 		to_chat(user, "<font color='yellow'>UNWORTHY HANDS TOUCH THE VESTMENTS, CEASE OR BE PUNISHED</font>")
 		spawn(30)
 			if(loc == user)
@@ -113,7 +108,7 @@
 	color = "#6c6c6c"
 
 /obj/item/clothing/suit/roguetown/shirt/robe/mage/Initialize()
-	color = pick("#4756d8", "#759259", "#bf6f39", "#c1b144")
+	color = pick("#4756d8", "#759259", "#bf6f39", "#c1b144", "#b8252c")
 	. = ..()
 
 /obj/item/clothing/suit/roguetown/shirt/robe/mageblue
@@ -124,6 +119,9 @@
 
 /obj/item/clothing/suit/roguetown/shirt/robe/mageorange
 	color = "#bf6f39"
+
+/obj/item/clothing/suit/roguetown/shirt/robe/magered
+	color = "#b8252c"
 
 /obj/item/clothing/suit/roguetown/shirt/robe/mageyellow
 	color = "#c1b144"
@@ -147,7 +145,6 @@
 	mob_overlay_icon = 'icons/roguetown/clothing/onmob/shirts.dmi'
 	sleeved = 'icons/roguetown/clothing/onmob/shirts.dmi'
 	boobed = TRUE
-	flags_inv = HIDEBOOB
 	r_sleeve_status = SLEEVE_NORMAL
 	l_sleeve_status = SLEEVE_NORMAL
 	allowed_sex = list(MALE, FEMALE)
@@ -165,6 +162,6 @@
 	sleeved = null
 	boobed = TRUE
 	color = null
-	flags_inv = HIDEBOOB
+	flags_inv = HIDEBOOB|HIDETAIL
 	r_sleeve_status = SLEEVE_NORMAL
 	l_sleeve_status = SLEEVE_NORMAL

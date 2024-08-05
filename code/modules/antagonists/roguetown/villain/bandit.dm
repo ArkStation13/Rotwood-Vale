@@ -82,11 +82,7 @@
 
 /datum/antagonist/bandit/after_name_change()
 	if(owner && owner.current)
-		var/datum/bounty/new_bounty = new /datum/bounty
-		new_bounty.amount = 80 //TODO: Make bandit bounty adjustable by King
-		new_bounty.target = owner.current.real_name
-		new_bounty.bandit = TRUE
-		GLOB.head_bounties += new_bounty
+		add_bounty(owner.current.real_name, 80, TRUE, "bandit activity", "The King")
 
 /datum/outfit/job/roguetown/bandit/pre_equip(mob/living/carbon/human/H)
 	..()
@@ -106,6 +102,8 @@
 	H.mind.adjust_skillrank(/datum/skill/misc/climbing, 3, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/misc/sewing, 2, TRUE)
 	H.mind.adjust_skillrank(/datum/skill/misc/medicine, 2, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/misc/athletics, 2, TRUE)
+	H.mind.adjust_skillrank(/datum/skill/misc/swimming, 2, TRUE)
 	belt = /obj/item/storage/belt/rogue/leather
 	pants = /obj/item/clothing/under/roguetown/trou/leather
 	shirt = /obj/item/clothing/suit/roguetown/shirt/shortshirt/random

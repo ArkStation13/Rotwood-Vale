@@ -131,8 +131,9 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 	var/list/exp = list()
 	var/list/menuoptions
-	
+
 	var/datum/migrant_pref/migrant
+	var/next_special_trait = null
 
 	var/action_buttons_screen_locs = list()
 
@@ -148,8 +149,11 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/update_mutant_colors = TRUE
 
 	var/headshot_link
+	var/nudeshot_link
+
 	var/list/violated = list()
 	var/list/descriptor_entries = list()
+	var/list/custom_descriptors = list()
 	var/defiant = TRUE
 
 
@@ -201,6 +205,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	accessory = "Nothing"
 
 	headshot_link = null
+	nudeshot_link = null
+
 	customizer_entries = list()
 	validate_customizer_entries()
 	reset_all_customizer_accessory_colors()
@@ -239,27 +245,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 			// Top-level menu table
 			dat += "<table style='width: 100%; line-height: 20px;'>"
-			// FIRST ROW
-			dat += "<tr>"
-			dat += "<td style='width:33%;text-align:left'>"
-			dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=changeslot;'>Change Character</a>"
-			dat += "</td>"
-
-
-			dat += "<td style='width:33%;text-align:center'>"
-			if(SStriumphs.triumph_buys_enabled)
-				dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=triumph_buy_menu'>Triumph Buy</a>"
-			dat += "</td>"
-
-			dat += "<td style='width:33%;text-align:right'>"
-			dat += "<a href='?_src_=prefs;preference=keybinds;task=menu'>Keybinds</a>"
-			dat += "</td>"
-			dat += "</tr>"
-
-
 			// NEXT ROW
 			dat += "<tr>"
 			dat += "<td style='width:33%;text-align:left'>"
+			dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=changeslot;'>Change Character</a>"
 			dat += "</td>"
 
 			dat += "<td style='width:33%;text-align:center'>"
@@ -267,6 +256,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "</td>"
 
 			dat += "<td style='width:33%;text-align:right'>"
+			dat += "<a href='?_src_=prefs;preference=keybinds;task=menu'>Keybinds</a>"
 			dat += "</td>"
 			dat += "</tr>"
 
@@ -291,6 +281,8 @@ GLOBAL_LIST_EMPTY(chosen_names)
 
 			dat += "<td style='width:33%;text-align:center'>"
 			dat += "<a href='?_src_=prefs;preference=triumphs;task=menu'><b>TRIUMPHS:</b></a> [user.get_triumphs() ? "\Roman [user.get_triumphs()]" : "None"]"
+			if(SStriumphs.triumph_buys_enabled)
+				dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=triumph_buy_menu'>Triumph Buy</a>"
 			dat += "</td>"
 
 			dat += "<td style='width:33%;text-align:right'>"
@@ -402,7 +394,6 @@ GLOBAL_LIST_EMPTY(chosen_names)
 				dat += "<b>Mutant Color #3:</b><span style='border: 1px solid #161616; background-color: #[features["mcolor3"]];'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=mutant_color3;task=input'>Change</a><BR>"
 
 
-			dat += "<br>"
 			dat += "<b>Voice Color: </b><a href='?_src_=prefs;preference=voice;task=input'>Change</a>"
 
 
@@ -410,9 +401,13 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<br><b>Markings:</b> <a href='?_src_=prefs;preference=markings;task=menu'>Change</a>"
 			dat += "<br><b>Descriptors:</b> <a href='?_src_=prefs;preference=descriptors;task=menu'>Change</a>"
 
-			dat += "<br><b>Headshot:</b> <a href='?_src_=prefs;preference=headshot;task=input'>Change</a>"
+			dat += "<br><b>Headshot(1:1):</b> <a href='?_src_=prefs;preference=headshot;task=input'>Change</a>"
 			if(headshot_link != null)
-				dat += "<br><img src='[headshot_link]' width='100px' height='100px'>"
+				dat += "<a href='?_src_=prefs;preference=view_headshot;task=input'>View</a>"
+
+			dat += "<br><b>Nudeshot(3:4):</b> <a href='?_src_=prefs;preference=nudeshot;task=input'>Change</a>"
+			if(nudeshot_link != null)
+				dat += "<a href='?_src_=prefs;preference=view_nudeshot;task=input'>View</a>"
 			dat += "</td>"
 
 			dat += "</tr></table>"
@@ -665,6 +660,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	dat += "<tr>"
 	dat += "<td width='33%' align='left'></td>"
 	dat += "<td width='33%' align='center'>"
+	dat += "<a href='?_src_=prefs;preference=bespecial'><b>[next_special_trait ? "<font color='red'>SPECIAL</font>" : "Be Special"]</b></a><BR>"
 	if(SSticker.current_state <= GAME_STATE_PREGAME)
 		switch(N.ready)
 			if(PLAYER_NOT_READY)
@@ -677,7 +673,7 @@ GLOBAL_LIST_EMPTY(chosen_names)
 		else
 			dat += "<a class='linkOff' href='byond://?src=[REF(N)];late_join=1'>JOINLATE</a>"
 		dat += " - <a href='?_src_=prefs;preference=migrants'>MIGRATION</a>"
-		
+
 	dat += "</td>"
 	dat += "<td width='33%' align='right'>"
 	dat += "<b>Be defiant:</b> <a href='?_src_=prefs;preference=be_defiant'>[(defiant) ? "Yes":"No"]</a><br>"
@@ -1518,10 +1514,25 @@ Slots: [job.spawn_positions]</span>
 							to_chat(user, "<font color='red'>This voice color is too dark for mortals.</font>")
 							return
 						voice_color = sanitize_hexcolor(new_voice)
+
+				if("view_headshot")
+					var/list/dat = list("<img src='[headshot_link]' width='250px' height='250px'>")
+					var/datum/browser/popup = new(user, "headshot", "<div align='center'>Headshot</div>", 310, 320)
+					popup.set_content(dat.Join())
+					popup.open(FALSE)
+					return
+
+				if("view_nudeshot")
+					var/list/dat = list("<img src='[nudeshot_link]' width='360px' height='480px'>")
+					var/datum/browser/popup = new(user, "nudeshot", "<div align='center'>Nudeshot</div>", 400, 525)
+					popup.set_content(dat.Join())
+					popup.open(FALSE)
+					return
+
 				if("headshot")
 					to_chat(user, "<span class='notice'>Please use a relatively SFW image of the head and shoulder area to maintain immersion level. Lastly, ["<span class='bold'>do not use a real life photo or use any image that is less than serious.</span>"]</span>")
 					to_chat(user, "<span class='notice'>If the photo doesn't show up properly in-game, ensure that it's a direct image link that opens properly in a browser.</span>")
-					to_chat(user, "<span class='notice'>Keep in mind that the photo will be downsized to 250x250 pixels, so the more square the photo, the better it will look.</span>")
+					to_chat(user, "<span class='notice'>Resolution: 250x250 pixels.</span>")
 					var/new_headshot_link = input(user, "Input the headshot link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Headshot", headshot_link) as text|null
 					if(new_headshot_link == null)
 						return
@@ -1536,6 +1547,25 @@ Slots: [job.spawn_positions]</span>
 					headshot_link = new_headshot_link
 					to_chat(user, "<span class='notice'>Successfully updated headshot picture</span>")
 					log_game("[user] has set their Headshot image to '[headshot_link]'.")
+
+				if("nudeshot")
+					to_chat(user, "<span class='notice'>["<span class='bold'>do not use a real life photo or use any image that is less than serious.</span>"]</span>")
+					to_chat(user, "<span class='notice'>If the photo doesn't show up properly in-game, ensure that it's a direct image link that opens properly in a browser.</span>")
+					to_chat(user, "<span class='notice'>Resolution: 360x480 pixels.</span>")
+					var/new_nudeshot_link = input(user, "Input the nudeshot link (https, hosts: gyazo, discord, lensdump, imgbox, catbox):", "Nudeshot", nudeshot_link) as text|null
+					if(new_nudeshot_link == null)
+						return
+					if(new_nudeshot_link == "")
+						nudeshot_link = null
+						ShowChoices(user)
+						return
+					if(!valid_headshot_link(user, new_nudeshot_link))
+						nudeshot_link = null
+						ShowChoices(user)
+						return
+					nudeshot_link = new_nudeshot_link
+					to_chat(user, "<span class='notice'>Successfully updated nudeshot picture</span>")
+					log_game("[user] has set their Nudeshot image to '[nudeshot_link]'.")
 
 				if("species")
 
@@ -1719,6 +1749,24 @@ Slots: [job.spawn_positions]</span>
 						domhand = 2
 					else
 						domhand = 1
+				if("bespecial")
+					if(next_special_trait)
+						print_special_text(user, next_special_trait)
+						return
+					to_chat(user, span_boldwarning("You will become special for one round, this could be something negative, positive or neutral and could have a high impact on your character and your experience."))
+					var/result = alert(user, "You'll receive a unique trait for one round\nDo I really want become special?", "Be Special", "Yes", "No")
+					if(result != "Yes")
+						return
+					if(next_special_trait)
+						return
+					next_special_trait = roll_random_special(user.client)
+					if(next_special_trait)
+						log_game("SPECIALS: Rolled [next_special_trait] for ckey: [user.ckey]")
+						print_special_text(user, next_special_trait)
+						user.playsound_local(user, 'sound/misc/alert.ogg', 100)
+						to_chat(user, span_warning("This will be applied on your next game join. You cannot reroll this, and it will not carry over to other rounds"))
+						to_chat(user, span_warning("You may switch your character and choose any role, if you don't meet the requirements (if any are specified) it won't be applied"))
+
 				if("family")
 					var/list/loly = list("Not yet.","Work in progress.","Don't click me.","Stop clicking this.","Nope.","Be patient.","Sooner or later.")
 					to_chat(user, "<font color='red'>[pick(loly)]</font>")
@@ -1910,7 +1958,7 @@ Slots: [job.spawn_positions]</span>
 				if("widescreenpref")
 					widescreenpref = !widescreenpref
 					user.client.change_view(CONFIG_GET(string/default_view))
-				
+
 				if("be_defiant")
 					defiant = !defiant
 					if(defiant)
@@ -1926,7 +1974,7 @@ Slots: [job.spawn_positions]</span>
 										Good voices will be rewarded with PQ for answering meditations, while bad ones are punished at the discretion of jannies.</span>")
 					else
 						to_chat(user, span_warning("You are no longer a voice."))
-				
+
 				if("migrants")
 					migrant.show_ui()
 					return
@@ -2056,6 +2104,7 @@ Slots: [job.spawn_positions]</span>
 	character.dna.real_name = character.real_name
 
 	character.headshot_link = headshot_link
+	character.nudeshot_link = nudeshot_link
 
 	if(parent)
 		var/list/L = get_player_curses(parent.ckey)
